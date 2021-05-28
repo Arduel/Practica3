@@ -46,6 +46,12 @@ end
 
 % --- Executes just before Practica_3 is made visible.
 function Practica_3_OpeningFcn(hObject, eventdata, handles, varargin)
+axes(handles.axes1);
+bkg=imread('IPN.png');
+imshow(bkg);
+axes(handles.axes2);
+bkg2=imread('UPIITA.png');
+imshow(bkg2);
 % This function has no output args, see OutputFcn.
 % hObject    handle to figure
 % eventdata  reserved - to be defined in a future version of MATLAB
