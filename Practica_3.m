@@ -68,9 +68,14 @@ varargout{1} = handles.output;
 
 % --- Executes on button press in B_G.
 function B_G_Callback(hObject, eventdata, handles)
-% hObject    handle to B_G (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
+syms x y
+F_xy=str2sym(get(handles.Fxy,'String'));
+Xmin=str2sym(get(handles.xmin,'String'));
+Xmax=str2sym(get(handles.xmax,'String'));
+Xdiv=str2sym(get(handles.xdiv,'String'));
+Ymin=str2sym(get(handles.ymin,'String'));
+Ymax=str2sym(get(handles.ymax,'String'));
+Ydiv=str2sym(get(handles.ydiv,'String'));
 
 
 % --- Executes on button press in B_L.
