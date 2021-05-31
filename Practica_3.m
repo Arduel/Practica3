@@ -70,13 +70,17 @@ varargout{1} = handles.output;
 function B_G_Callback(hObject, eventdata, handles)
 syms x y
 F_xy=str2sym(get(handles.Fxy,'String'));
-Xmin=str2sym(get(handles.xmin,'String'));
-Xmax=str2sym(get(handles.xmax,'String'));
-Xdiv=str2sym(get(handles.xdiv,'String'));
-Ymin=str2sym(get(handles.ymin,'String'));
-Ymax=str2sym(get(handles.ymax,'String'));
-Ydiv=str2sym(get(handles.ydiv,'String'));
+Xmin=str2double(get(handles.xmin,'String'));
+Xmax=str2double(get(handles.xmax,'String'));
+Xdiv=str2double(get(handles.xdiv,'String'));
+Ymin=str2double(get(handles.ymin,'String'));
+Ymax=str2double(get(handles.ymax,'String'));
+Ydiv=str2double(get(handles.ydiv,'String'));
 
+Xx=linspace(Xmin,Xmax,Xdiv+1);
+Yy=linspace(Ymin,Ymax,Ydiv+1);
+
+[Vol,A,dx,dy,Px,Py,X,Y,Z] = Calc(F_xy,Xx,Yy,Xdiv,Ydiv);
 
 % --- Executes on button press in B_L.
 function B_L_Callback(hObject, eventdata, handles)
