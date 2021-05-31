@@ -82,6 +82,20 @@ Yy=linspace(Ymin,Ymax,Ydiv+1);
 
 [Vol,A,dx,dy,Px,Py,X,Y,Z] = Calc(F_xy,Xx,Yy,Xdiv,Ydiv);
 
+axes(handles.g_fxy);
+ax = gca;   
+cla
+ax.Color = [0.15 0.15 0.15];
+ax.XColor = [1 0.27 0];
+ax.YColor = [1 0.27 0];
+ax.ZColor = [1 0.27 0];
+grid on
+hold on
+mesh(X,Y,Z)
+plot(Px,Py,'r.','MarkerSize',10)
+fmesh(F_xy,[Xmin Xmax Ymin Ymax])
+
+
 % --- Executes on button press in B_L.
 function B_L_Callback(hObject, eventdata, handles)
 % hObject    handle to B_L (see GCBO)
