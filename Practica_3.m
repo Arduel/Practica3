@@ -22,7 +22,7 @@ function varargout = Practica_3(varargin)
 
 % Edit the above text to modify the response to help Practica_3
 
-% Last Modified by GUIDE v2.5 28-May-2021 23:31:13
+% Last Modified by GUIDE v2.5 31-May-2021 03:55:48
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -244,3 +244,13 @@ function Vol_CreateFcn(hObject, eventdata, handles)
 if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgroundColor'))
     set(hObject,'BackgroundColor','white');
 end
+
+
+% --- Executes on button press in B_Ls.
+function B_Ls_Callback(hObject, eventdata, handles)
+%
+
+
+% --- Executes on button press in B_Ps.
+function B_Ps_Callback(hObject, eventdata, handles)
+%
