@@ -118,6 +118,19 @@ hold on
 mesh(X,Y,Z)
 plot(Px,Py,'r.','MarkerSize',10)
 
+%Grafica 3
+axes(handles.g_zoom);
+ax = gca;   
+cla
+ax.Color = [0.15 0.15 0.15];
+ax.XColor = [1 0.27 0];
+ax.YColor = [1 0.27 0];
+ax.ZColor = [1 0.27 0];
+axis([Xx(3)-0.1 Xx(3)+dx+0.1 Yy(3)-0.1 Yy(3)+dy+0.1]);
+hold on
+mesh(X,Y,Z)
+plot(Px,Py,'r.','MarkerSize',20)
+
 
 % --- Executes on button press in B_L.
 function B_L_Callback(hObject, eventdata, handles)
