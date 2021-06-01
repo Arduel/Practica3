@@ -164,7 +164,28 @@ set(handles.FEval,'String',F_Ev)
 
 % --- Executes on button press in B_L.
 function B_L_Callback(hObject, eventdata, handles)
-
+set(handles.A,'String','')
+set(handles.DX,'String','')
+set(handles.DY,'String','')
+set(handles.Fxy,'String','')
+set(handles.Vol,'String','')
+set(handles.CPx,'String','')
+set(handles.CPy,'String','')
+set(handles.xmin,'String','')
+set(handles.xmax,'String','')
+set(handles.ymin,'String','')
+set(handles.ymax,'String','')
+set(handles.VolP,'String','')
+set(handles.Reg,'String','1')
+set(handles.FEval,'String','')
+set(handles.xdiv,'String','10')
+set(handles.ydiv,'String','10')
+axes(handles.g_fxy)
+cla
+axes(handles.g_cu)
+cla
+axes(handles.g_zoom)
+cla
 
 
 function ymax_Callback(hObject, eventdata, handles)
