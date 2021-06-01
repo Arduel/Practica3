@@ -1,4 +1,4 @@
-function [Vol,A,dx,dy,Px,Py,X,Y,Z] = Calc(F,Xx,Yy,xdiv,ydiv)
+function [Vol,A,dx,dy,Px,Py,X,Y,Z,C,F] = Calc(F,Xx,Yy,xdiv,ydiv)
 % Funcion que realiza los calculos correspondientes del volumen y los
 % puntos considerados para el calculo
     syms x y
@@ -44,6 +44,17 @@ function [Vol,A,dx,dy,Px,Py,X,Y,Z] = Calc(F,Xx,Yy,xdiv,ydiv)
     end
     [X,Y] = meshgrid(Xx,Yy);
     Z = zeros(n);
+    
+    Cc=unique(X);
+    Ff=unique(Y);
+    C=zeros(xdiv,ydiv);
+    F=zeros(xdiv,ydiv);
+    for i=1:1:xdiv
+        for j=1:1:ydiv
+            C(i,j)=Cc(i);
+            F(i,j)=Ff(j);
+        end
+    end
 
 end
 
