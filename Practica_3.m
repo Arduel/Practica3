@@ -88,7 +88,6 @@ Xdiv=str2double(get(handles.xdiv,'String'));
 Ymin=str2double(get(handles.ymin,'String'));
 Ymax=str2double(get(handles.ymax,'String'));
 Ydiv=str2double(get(handles.ydiv,'String'));
-Reg=str2double(get(handles.Reg,'String'));
 
 Xx=linspace(Xmin,Xmax,Xdiv+1);
 Yy=linspace(Ymin,Ymax,Ydiv+1);
@@ -105,6 +104,18 @@ Cz=Z;
 Cc=C;
 Ff=F;
 
+Reg=1;
+
+Fxy(x,y)=F_xy;
+F_Ev=char(vpa(Fxy(PPx(Reg),PPy(Reg))));
+
+set(handles.Vol,'String',char(Vol))
+set(handles.DX,'String',num2str(dx))
+set(handles.DY,'String',num2str(dy))
+set(handles.A,'String',num2str(A))
+set(handles.Reg,'String',num2str(Reg))
+set(handles.VolP,'String',char(vpa(Fxy(Px(Reg),Py(Reg)))*A))
+
 %Grafica 1
 axes(handles.g_fxy);
 ax = gca;   
@@ -118,6 +129,7 @@ hold on
 mesh(Cx,Cy,Cz)
 plot(Px,Py,'r.','MarkerSize',10)
 fmesh(F_xy,[Xmin Xmax Ymin Ymax])
+fcontour(F_xy,[Xmin Xmax Ymin Ymax])
 
 %Grafica 2
 axes(handles.g_cu);
@@ -130,28 +142,28 @@ ax.ZColor = [1 0.27 0];
 hold on
 mesh(Cx,Cy,Cz)
 plot(Px,Py,'r.','MarkerSize',10)
+fcontour(F_xy,[Xmin Xmax Ymin Ymax])
 
 %Grafica 3
-axes(handles.g_zoom);
+axes(handles.g_zoom)
 ax = gca;   
 cla
 ax.Color = [0.15 0.15 0.15];
 ax.XColor = [1 0.27 0];
 ax.YColor = [1 0.27 0];
 ax.ZColor = [1 0.27 0];
-axis([Cc(Reg)-0.1 Cc(Reg)+Dx+0.1 Ff(Reg)-0.1 Ff(Reg)+Dy+0.1]);
+axis([Cc(Reg) Cc(Reg)+Dx Ff(Reg) Ff(Reg)+Dy]);
 hold on
 mesh(Cx,Cy,Cz)
-plot(Px,Py,'r.','MarkerSize',20)
+plot(Px,Py,'r.','MarkerSize',30)
+fcontour(F_xy,[Xmin Xmax Ymin Ymax])
 set(handles.CPx,'String',mat2str(round(PPx(Reg),6,'significant')))
 set(handles.CPy,'String',mat2str(round(PPy(Reg),6,'significant')))
+set(handles.FEval,'String',F_Ev)
 
 
 % --- Executes on button press in B_L.
 function B_L_Callback(hObject, eventdata, handles)
-% hObject    handle to B_L (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
 
 
 
@@ -264,13 +276,21 @@ end
 % --- Executes on button press in B_Ls.
 function B_Ls_Callback(hObject, eventdata, handles)
 global PPx PPy Dx Dy Cc Ff Cx Cy Cz
-Val=str2double(get(handles.Reg,'String'));
+syms x y
+F_xy=str2sym(get(handles.Fxy,'String'));
+Xmin=str2double(get(handles.xmin,'String'));
+Xmax=str2double(get(handles.xmax,'String'));
+Ymin=str2double(get(handles.ymin,'String'));
+Ymax=str2double(get(handles.ymax,'String'));
+Reg=str2double(get(handles.Reg,'String'));
 Px=transpose(PPx);
 Py=transpose(PPy);
-if Val > 1
-    Val=Val-1;
-    set(handles.Reg,'String',num2str(Val))
+Fxy(x,y)=F_xy;
+if Reg > 1
+    Reg=Reg-1;
+    set(handles.Reg,'String',num2str(Reg))
 end
+F_Ev=char(vpa(Fxy(PPx(Reg),PPy(Reg))));
 axes(handles.g_zoom);
 ax = gca;   
 cla
@@ -278,26 +298,38 @@ ax.Color = [0.15 0.15 0.15];
 ax.XColor = [1 0.27 0];
 ax.YColor = [1 0.27 0];
 ax.ZColor = [1 0.27 0];
-axis([Cc(Val)-0.1 Cc(Val)+Dx+0.1 Ff(Val)-0.1 Ff(Val)+Dy+0.1]);
+axis([Cc(Reg) Cc(Reg)+Dx Ff(Reg) Ff(Reg)+Dy]);
 hold on
 mesh(Cx,Cy,Cz)
-plot(Px,Py,'r.','MarkerSize',20)
-set(handles.CPx,'String',mat2str(round(PPx(Val),6,'significant')))
-set(handles.CPy,'String',mat2str(round(PPy(Val),6,'significant')))
+plot(Px,Py,'r.','MarkerSize',30)
+fcontour(F_xy,[Xmin Xmax Ymin Ymax])
+set(handles.CPx,'String',mat2str(round(PPx(Reg),6,'significant')))
+set(handles.CPy,'String',mat2str(round(PPy(Reg),6,'significant')))
+set(handles.FEval,'String',F_Ev)
+set(handles.VolP,'String',char(vpa(Fxy(PPx(Reg),PPy(Reg)))*Dx*Dy))
+
 
 
 % --- Executes on button press in B_Ps.
 function B_Ps_Callback(hObject, eventdata, handles)
 global PPx PPy Dx Dy Cc Ff Cx Cy Cz
+syms x y
+F_xy=str2sym(get(handles.Fxy,'String'));
+Xmin=str2double(get(handles.xmin,'String'));
+Xmax=str2double(get(handles.xmax,'String'));
+Ymin=str2double(get(handles.ymin,'String'));
+Ymax=str2double(get(handles.ymax,'String'));
 xd=str2double(get(handles.xdiv,'String'));
 yd=str2double(get(handles.ydiv,'String'));
-Val=str2double(get(handles.Reg,'String'));
+Reg=str2double(get(handles.Reg,'String'));
 Px=transpose(PPx);
 Py=transpose(PPy);
-if Val < xd*yd
-    Val=Val+1;
-    set(handles.Reg,'String',num2str(Val))
+Fxy(x,y)=F_xy;
+if Reg < xd*yd
+    Reg=Reg+1;
+    set(handles.Reg,'String',num2str(Reg))
 end
+F_Ev=char(vpa(Fxy(PPx(Reg),PPy(Reg))));
 axes(handles.g_zoom);
 ax = gca;   
 cla
@@ -305,9 +337,12 @@ ax.Color = [0.15 0.15 0.15];
 ax.XColor = [1 0.27 0];
 ax.YColor = [1 0.27 0];
 ax.ZColor = [1 0.27 0];
-axis([Cc(Val)-0.1 Cc(Val)+Dx+0.1 Ff(Val)-0.1 Ff(Val)+Dy+0.1]);
+axis([Cc(Reg) Cc(Reg)+Dx Ff(Reg) Ff(Reg)+Dy]);
 hold on
 mesh(Cx,Cy,Cz)
-plot(Px,Py,'r.','MarkerSize',20)
-set(handles.CPx,'String',mat2str(round(PPx(Val),6,'significant')))
-set(handles.CPy,'String',mat2str(round(PPy(Val),6,'significant')))
+plot(Px,Py,'r.','MarkerSize',30)
+fcontour(F_xy,[Xmin Xmax Ymin Ymax])
+set(handles.CPx,'String',mat2str(round(PPx(Reg),6,'significant')))
+set(handles.CPy,'String',mat2str(round(PPy(Reg),6,'significant')))
+set(handles.FEval,'String',F_Ev)
+set(handles.VolP,'String',char(vpa(Fxy(PPx(Reg),PPy(Reg)))*Dx*Dy))
