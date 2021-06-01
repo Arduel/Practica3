@@ -22,7 +22,7 @@ function varargout = Practica_3(varargin)
 
 % Edit the above text to modify the response to help Practica_3
 
-% Last Modified by GUIDE v2.5 31-May-2021 03:55:48
+% Last Modified by GUIDE v2.5 31-May-2021 04:23:03
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -78,6 +78,8 @@ varargout{1} = handles.output;
 
 % --- Executes on button press in B_G.
 function B_G_Callback(hObject, eventdata, handles)
+global PPx PPy Dx Dy Cc Ff Cx Cy Cz
+
 syms x y
 F_xy=str2sym(get(handles.Fxy,'String'));
 Xmin=str2double(get(handles.xmin,'String'));
@@ -86,11 +88,22 @@ Xdiv=str2double(get(handles.xdiv,'String'));
 Ymin=str2double(get(handles.ymin,'String'));
 Ymax=str2double(get(handles.ymax,'String'));
 Ydiv=str2double(get(handles.ydiv,'String'));
+Reg=str2double(get(handles.Reg,'String'));
 
 Xx=linspace(Xmin,Xmax,Xdiv+1);
 Yy=linspace(Ymin,Ymax,Ydiv+1);
 
-[Vol,A,dx,dy,Px,Py,X,Y,Z] = Calc(F_xy,Xx,Yy,Xdiv,Ydiv);
+[Vol,A,dx,dy,Px,Py,X,Y,Z,C,F] = Calc(F_xy,Xx,Yy,Xdiv,Ydiv);
+
+PPx=Px;
+PPy=Py;
+Dx=dx;
+Dy=dy;
+Cx=X;
+Cy=Y;
+Cz=Z;
+Cc=C;
+Ff=F;
 
 %Grafica 1
 axes(handles.g_fxy);
@@ -102,7 +115,7 @@ ax.YColor = [1 0.27 0];
 ax.ZColor = [1 0.27 0];
 grid on
 hold on
-mesh(X,Y,Z)
+mesh(Cx,Cy,Cz)
 plot(Px,Py,'r.','MarkerSize',10)
 fmesh(F_xy,[Xmin Xmax Ymin Ymax])
 
@@ -115,7 +128,7 @@ ax.XColor = [1 0.27 0];
 ax.YColor = [1 0.27 0];
 ax.ZColor = [1 0.27 0];
 hold on
-mesh(X,Y,Z)
+mesh(Cx,Cy,Cz)
 plot(Px,Py,'r.','MarkerSize',10)
 
 %Grafica 3
@@ -126,10 +139,12 @@ ax.Color = [0.15 0.15 0.15];
 ax.XColor = [1 0.27 0];
 ax.YColor = [1 0.27 0];
 ax.ZColor = [1 0.27 0];
-axis([Xx(3)-0.1 Xx(3)+dx+0.1 Yy(3)-0.1 Yy(3)+dy+0.1]);
+axis([Cc(Reg)-0.1 Cc(Reg)+Dx+0.1 Ff(Reg)-0.1 Ff(Reg)+Dy+0.1]);
 hold on
-mesh(X,Y,Z)
+mesh(Cx,Cy,Cz)
 plot(Px,Py,'r.','MarkerSize',20)
+set(handles.CPx,'String',mat2str(round(PPx(Reg),6,'significant')))
+set(handles.CPy,'String',mat2str(round(PPy(Reg),6,'significant')))
 
 
 % --- Executes on button press in B_L.
@@ -248,9 +263,51 @@ end
 
 % --- Executes on button press in B_Ls.
 function B_Ls_Callback(hObject, eventdata, handles)
-%
+global PPx PPy Dx Dy Cc Ff Cx Cy Cz
+Val=str2double(get(handles.Reg,'String'));
+Px=transpose(PPx);
+Py=transpose(PPy);
+if Val > 1
+    Val=Val-1;
+    set(handles.Reg,'String',num2str(Val))
+end
+axes(handles.g_zoom);
+ax = gca;   
+cla
+ax.Color = [0.15 0.15 0.15];
+ax.XColor = [1 0.27 0];
+ax.YColor = [1 0.27 0];
+ax.ZColor = [1 0.27 0];
+axis([Cc(Val)-0.1 Cc(Val)+Dx+0.1 Ff(Val)-0.1 Ff(Val)+Dy+0.1]);
+hold on
+mesh(Cx,Cy,Cz)
+plot(Px,Py,'r.','MarkerSize',20)
+set(handles.CPx,'String',mat2str(round(PPx(Val),6,'significant')))
+set(handles.CPy,'String',mat2str(round(PPy(Val),6,'significant')))
 
 
 % --- Executes on button press in B_Ps.
 function B_Ps_Callback(hObject, eventdata, handles)
-%
+global PPx PPy Dx Dy Cc Ff Cx Cy Cz
+xd=str2double(get(handles.xdiv,'String'));
+yd=str2double(get(handles.ydiv,'String'));
+Val=str2double(get(handles.Reg,'String'));
+Px=transpose(PPx);
+Py=transpose(PPy);
+if Val < xd*yd
+    Val=Val+1;
+    set(handles.Reg,'String',num2str(Val))
+end
+axes(handles.g_zoom);
+ax = gca;   
+cla
+ax.Color = [0.15 0.15 0.15];
+ax.XColor = [1 0.27 0];
+ax.YColor = [1 0.27 0];
+ax.ZColor = [1 0.27 0];
+axis([Cc(Val)-0.1 Cc(Val)+Dx+0.1 Ff(Val)-0.1 Ff(Val)+Dy+0.1]);
+hold on
+mesh(Cx,Cy,Cz)
+plot(Px,Py,'r.','MarkerSize',20)
+set(handles.CPx,'String',mat2str(round(PPx(Val),6,'significant')))
+set(handles.CPy,'String',mat2str(round(PPy(Val),6,'significant')))
