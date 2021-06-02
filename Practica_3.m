@@ -22,7 +22,7 @@ function varargout = Practica_3(varargin)
 
 % Edit the above text to modify the response to help Practica_3
 
-% Last Modified by GUIDE v2.5 31-May-2021 04:23:03
+% Last Modified by GUIDE v2.5 01-Jun-2021 21:57:13
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -56,12 +56,17 @@ imshow(bkg2);
 axes(handles.g_fxy);
 ax = gca;
 plot3(1,1,1,'r.')
+grid on
+cla
+axes(handles.g_cu)
+cla
+axes(handles.g_zoom)
 cla
 ax.Color = [0.15 0.15 0.15];
 ax.XColor = [1 0.27 0];
 ax.YColor = [1 0.27 0];
 ax.ZColor = [1 0.27 0];
-grid on
+
 
 handles.output = hObject;
 
@@ -81,6 +86,8 @@ function B_G_Callback(hObject, eventdata, handles)
 global PPx PPy Dx Dy Cc Ff Cx Cy Cz
 
 syms x y
+P=get(handles.CB_P,'Value');
+Cn=get(handles.CB_C,'Value');
 F_xy=str2sym(get(handles.Fxy,'String'));
 Xmin=str2double(get(handles.xmin,'String'));
 Xmax=str2double(get(handles.xmax,'String'));
@@ -120,43 +127,41 @@ set(handles.VolP,'String',char(vpa(Fxy(Px(Reg),Py(Reg)))*A))
 axes(handles.g_fxy);
 ax = gca;   
 cla
-ax.Color = [0.15 0.15 0.15];
-ax.XColor = [1 0.27 0];
-ax.YColor = [1 0.27 0];
-ax.ZColor = [1 0.27 0];
 grid on
 hold on
 mesh(Cx,Cy,Cz)
-plot(Px,Py,'r.','MarkerSize',10)
 fmesh(F_xy,[Xmin Xmax Ymin Ymax])
-fcontour(F_xy,[Xmin Xmax Ymin Ymax])
+if P == 1
+    plot(Px,Py,'r.','MarkerSize',10)
+end
+if Cn == 1
+    fcontour(F_xy,[Xmin Xmax Ymin Ymax])
+end
 
 %Grafica 2
 axes(handles.g_cu);
 ax = gca;   
 cla
-ax.Color = [0.15 0.15 0.15];
-ax.XColor = [1 0.27 0];
-ax.YColor = [1 0.27 0];
-ax.ZColor = [1 0.27 0];
 hold on
 mesh(Cx,Cy,Cz)
-plot(Px,Py,'r.','MarkerSize',10)
-fcontour(F_xy,[Xmin Xmax Ymin Ymax])
+if P == 1
+    plot(Px,Py,'r.','MarkerSize',10)
+end
+if Cn == 1
+    fcontour(F_xy,[Xmin Xmax Ymin Ymax])
+end
 
 %Grafica 3
 axes(handles.g_zoom)
 ax = gca;   
 cla
-ax.Color = [0.15 0.15 0.15];
-ax.XColor = [1 0.27 0];
-ax.YColor = [1 0.27 0];
-ax.ZColor = [1 0.27 0];
 axis([Cc(Reg) Cc(Reg)+Dx Ff(Reg) Ff(Reg)+Dy]);
 hold on
 mesh(Cx,Cy,Cz)
 plot(Px,Py,'r.','MarkerSize',30)
-fcontour(F_xy,[Xmin Xmax Ymin Ymax])
+if Cn == 1
+    fcontour(F_xy,[Xmin Xmax Ymin Ymax])
+end
 set(handles.CPx,'String',mat2str(round(PPx(Reg),6,'significant')))
 set(handles.CPy,'String',mat2str(round(PPy(Reg),6,'significant')))
 set(handles.FEval,'String',F_Ev)
@@ -187,6 +192,193 @@ cla
 axes(handles.g_zoom)
 cla
 
+% --- Executes on button press in B_Ls.
+function B_Ls_Callback(hObject, eventdata, handles)
+global PPx PPy Dx Dy Cc Ff Cx Cy Cz
+syms x y
+Cn=get(handles.CB_C,'Value');
+F_xy=str2sym(get(handles.Fxy,'String'));
+Xmin=str2double(get(handles.xmin,'String'));
+Xmax=str2double(get(handles.xmax,'String'));
+Ymin=str2double(get(handles.ymin,'String'));
+Ymax=str2double(get(handles.ymax,'String'));
+Reg=str2double(get(handles.Reg,'String'));
+Px=transpose(PPx);
+Py=transpose(PPy);
+Fxy(x,y)=F_xy;
+if Reg > 1
+    Reg=Reg-1;
+    set(handles.Reg,'String',num2str(Reg))
+end
+F_Ev=char(vpa(Fxy(PPx(Reg),PPy(Reg))));
+axes(handles.g_zoom);
+ax = gca;   
+cla
+axis([Cc(Reg) Cc(Reg)+Dx Ff(Reg) Ff(Reg)+Dy]);
+hold on
+mesh(Cx,Cy,Cz)
+plot(Px,Py,'r.','MarkerSize',30)
+if Cn == 1
+    fcontour(F_xy,[Xmin Xmax Ymin Ymax])
+end
+set(handles.CPx,'String',mat2str(round(PPx(Reg),6,'significant')))
+set(handles.CPy,'String',mat2str(round(PPy(Reg),6,'significant')))
+set(handles.FEval,'String',F_Ev)
+set(handles.VolP,'String',char(vpa(Fxy(PPx(Reg),PPy(Reg)))*Dx*Dy))
+
+
+
+% --- Executes on button press in B_Ps.
+function B_Ps_Callback(hObject, eventdata, handles)
+global PPx PPy Dx Dy Cc Ff Cx Cy Cz
+syms x y
+Cn=get(handles.CB_C,'Value');
+F_xy=str2sym(get(handles.Fxy,'String'));
+Xmin=str2double(get(handles.xmin,'String'));
+Xmax=str2double(get(handles.xmax,'String'));
+Ymin=str2double(get(handles.ymin,'String'));
+Ymax=str2double(get(handles.ymax,'String'));
+xd=str2double(get(handles.xdiv,'String'));
+yd=str2double(get(handles.ydiv,'String'));
+Reg=str2double(get(handles.Reg,'String'));
+Px=transpose(PPx);
+Py=transpose(PPy);
+Fxy(x,y)=F_xy;
+if Reg < xd*yd
+    Reg=Reg+1;
+    set(handles.Reg,'String',num2str(Reg))
+end
+F_Ev=char(vpa(Fxy(PPx(Reg),PPy(Reg))));
+axes(handles.g_zoom);
+ax = gca;   
+cla
+mesh(Cx,Cy,Cz)
+axis([Cc(Reg) Cc(Reg)+Dx Ff(Reg) Ff(Reg)+Dy]);
+hold on
+plot(Px,Py,'r.','MarkerSize',30)
+if Cn == 1
+    fcontour(F_xy,[Xmin Xmax Ymin Ymax])
+end
+set(handles.CPx,'String',mat2str(round(PPx(Reg),6,'significant')))
+set(handles.CPy,'String',mat2str(round(PPy(Reg),6,'significant')))
+set(handles.FEval,'String',F_Ev)
+set(handles.VolP,'String',char(vpa(Fxy(PPx(Reg),PPy(Reg)))*Dx*Dy))
+
+
+% --- Executes on button press in CB_P.
+function CB_P_Callback(hObject, eventdata, handles)
+global PPx PPy Dx Dy Cx Cy Cz Cc Ff
+syms x y
+Cn=get(handles.CB_C,'Value');
+F_xy=str2sym(get(handles.Fxy,'String'));
+Xmin=str2double(get(handles.xmin,'String'));
+Xmax=str2double(get(handles.xmax,'String'));
+Ymin=str2double(get(handles.ymin,'String'));
+Ymax=str2double(get(handles.ymax,'String'));
+xd=str2double(get(handles.xdiv,'String'));
+yd=str2double(get(handles.ydiv,'String'));
+Reg=str2double(get(handles.Reg,'String'));
+Px=transpose(PPx);
+Py=transpose(PPy);
+Fxy(x,y)=F_xy;
+
+%Grafica 1
+axes(handles.g_fxy);
+ax = gca;   
+cla
+grid on
+hold on
+mesh(Cx,Cy,Cz)
+fmesh(F_xy,[Xmin Xmax Ymin Ymax])
+if hObject.Value == 1
+    plot(Px,Py,'r.','MarkerSize',10)
+end
+if Cn == 1
+    fcontour(F_xy,[Xmin Xmax Ymin Ymax])
+end
+
+%Grafica 2
+axes(handles.g_cu);
+ax = gca;   
+cla
+hold on
+mesh(Cx,Cy,Cz)
+if hObject.Value == 1
+    plot(Px,Py,'r.','MarkerSize',10)
+end
+if Cn == 1
+    fcontour(F_xy,[Xmin Xmax Ymin Ymax])
+end
+
+%Grafica 3
+axes(handles.g_zoom)
+ax = gca;   
+cla
+axis([Cc(Reg) Cc(Reg)+Dx Ff(Reg) Ff(Reg)+Dy]);
+hold on
+mesh(Cx,Cy,Cz)
+plot(Px,Py,'r.','MarkerSize',30)
+if Cn == 1
+    fcontour(F_xy,[Xmin Xmax Ymin Ymax])
+end
+
+
+% --- Executes on button press in CB_C.
+function CB_C_Callback(hObject, eventdata, handles)
+global PPx PPy Dx Dy Cx Cy Cz Cc Ff
+syms x y
+P=get(handles.CB_P,'Value');
+F_xy=str2sym(get(handles.Fxy,'String'));
+Xmin=str2double(get(handles.xmin,'String'));
+Xmax=str2double(get(handles.xmax,'String'));
+Ymin=str2double(get(handles.ymin,'String'));
+Ymax=str2double(get(handles.ymax,'String'));
+xd=str2double(get(handles.xdiv,'String'));
+yd=str2double(get(handles.ydiv,'String'));
+Reg=str2double(get(handles.Reg,'String'));
+Px=transpose(PPx);
+Py=transpose(PPy);
+Fxy(x,y)=F_xy;
+
+%Grafica 1
+axes(handles.g_fxy);
+ax = gca;   
+cla
+grid on
+hold on
+mesh(Cx,Cy,Cz)
+fmesh(F_xy,[Xmin Xmax Ymin Ymax])
+if P == 1
+    plot(Px,Py,'r.','MarkerSize',10)
+end
+if hObject.Value == 1
+    fcontour(F_xy,[Xmin Xmax Ymin Ymax])
+end
+
+%Grafica 2
+axes(handles.g_cu);
+ax = gca;   
+cla
+hold on
+mesh(Cx,Cy,Cz)
+if P == 1
+    plot(Px,Py,'r.','MarkerSize',10)
+end
+if hObject.Value == 1
+    fcontour(F_xy,[Xmin Xmax Ymin Ymax])
+end
+
+%Grafica 3
+axes(handles.g_zoom)
+ax = gca;   
+cla
+axis([Cc(Reg) Cc(Reg)+Dx Ff(Reg) Ff(Reg)+Dy]);
+hold on
+mesh(Cx,Cy,Cz)
+plot(Px,Py,'r.','MarkerSize',30)
+if hObject.Value == 1
+    fcontour(F_xy,[Xmin Xmax Ymin Ymax])
+end
 
 function ymax_Callback(hObject, eventdata, handles)
 
@@ -293,77 +485,3 @@ if ispc && isequal(get(hObject,'BackgroundColor'), get(0,'defaultUicontrolBackgr
     set(hObject,'BackgroundColor','white');
 end
 
-
-% --- Executes on button press in B_Ls.
-function B_Ls_Callback(hObject, eventdata, handles)
-global PPx PPy Dx Dy Cc Ff Cx Cy Cz
-syms x y
-F_xy=str2sym(get(handles.Fxy,'String'));
-Xmin=str2double(get(handles.xmin,'String'));
-Xmax=str2double(get(handles.xmax,'String'));
-Ymin=str2double(get(handles.ymin,'String'));
-Ymax=str2double(get(handles.ymax,'String'));
-Reg=str2double(get(handles.Reg,'String'));
-Px=transpose(PPx);
-Py=transpose(PPy);
-Fxy(x,y)=F_xy;
-if Reg > 1
-    Reg=Reg-1;
-    set(handles.Reg,'String',num2str(Reg))
-end
-F_Ev=char(vpa(Fxy(PPx(Reg),PPy(Reg))));
-axes(handles.g_zoom);
-ax = gca;   
-cla
-ax.Color = [0.15 0.15 0.15];
-ax.XColor = [1 0.27 0];
-ax.YColor = [1 0.27 0];
-ax.ZColor = [1 0.27 0];
-axis([Cc(Reg) Cc(Reg)+Dx Ff(Reg) Ff(Reg)+Dy]);
-hold on
-mesh(Cx,Cy,Cz)
-plot(Px,Py,'r.','MarkerSize',30)
-fcontour(F_xy,[Xmin Xmax Ymin Ymax])
-set(handles.CPx,'String',mat2str(round(PPx(Reg),6,'significant')))
-set(handles.CPy,'String',mat2str(round(PPy(Reg),6,'significant')))
-set(handles.FEval,'String',F_Ev)
-set(handles.VolP,'String',char(vpa(Fxy(PPx(Reg),PPy(Reg)))*Dx*Dy))
-
-
-
-% --- Executes on button press in B_Ps.
-function B_Ps_Callback(hObject, eventdata, handles)
-global PPx PPy Dx Dy Cc Ff Cx Cy Cz
-syms x y
-F_xy=str2sym(get(handles.Fxy,'String'));
-Xmin=str2double(get(handles.xmin,'String'));
-Xmax=str2double(get(handles.xmax,'String'));
-Ymin=str2double(get(handles.ymin,'String'));
-Ymax=str2double(get(handles.ymax,'String'));
-xd=str2double(get(handles.xdiv,'String'));
-yd=str2double(get(handles.ydiv,'String'));
-Reg=str2double(get(handles.Reg,'String'));
-Px=transpose(PPx);
-Py=transpose(PPy);
-Fxy(x,y)=F_xy;
-if Reg < xd*yd
-    Reg=Reg+1;
-    set(handles.Reg,'String',num2str(Reg))
-end
-F_Ev=char(vpa(Fxy(PPx(Reg),PPy(Reg))));
-axes(handles.g_zoom);
-ax = gca;   
-cla
-ax.Color = [0.15 0.15 0.15];
-ax.XColor = [1 0.27 0];
-ax.YColor = [1 0.27 0];
-ax.ZColor = [1 0.27 0];
-axis([Cc(Reg) Cc(Reg)+Dx Ff(Reg) Ff(Reg)+Dy]);
-hold on
-mesh(Cx,Cy,Cz)
-plot(Px,Py,'r.','MarkerSize',30)
-fcontour(F_xy,[Xmin Xmax Ymin Ymax])
-set(handles.CPx,'String',mat2str(round(PPx(Reg),6,'significant')))
-set(handles.CPy,'String',mat2str(round(PPy(Reg),6,'significant')))
-set(handles.FEval,'String',F_Ev)
-set(handles.VolP,'String',char(vpa(Fxy(PPx(Reg),PPy(Reg)))*Dx*Dy))
