@@ -121,7 +121,7 @@ set(handles.DX,'String',num2str(dx))
 set(handles.DY,'String',num2str(dy))
 set(handles.A,'String',num2str(A))
 set(handles.Reg,'String',num2str(Reg))
-set(handles.VolP,'String',char(vpa(Fxy(Px(Reg),Py(Reg)))*A))
+set(handles.VolP,'String',char(abs(vpa(Fxy(Px(Reg),Py(Reg))))*A))
 
 %Grafica 1
 axes(handles.g_fxy);
@@ -224,7 +224,7 @@ end
 set(handles.CPx,'String',mat2str(round(PPx(Reg),6,'significant')))
 set(handles.CPy,'String',mat2str(round(PPy(Reg),6,'significant')))
 set(handles.FEval,'String',F_Ev)
-set(handles.VolP,'String',char(vpa(Fxy(PPx(Reg),PPy(Reg)))*Dx*Dy))
+set(handles.VolP,'String',char(abs(vpa(Fxy(PPx(Reg),PPy(Reg))))*Dx*Dy))
 
 
 
@@ -262,7 +262,7 @@ end
 set(handles.CPx,'String',mat2str(round(PPx(Reg),6,'significant')))
 set(handles.CPy,'String',mat2str(round(PPy(Reg),6,'significant')))
 set(handles.FEval,'String',F_Ev)
-set(handles.VolP,'String',char(vpa(Fxy(PPx(Reg),PPy(Reg)))*Dx*Dy))
+set(handles.VolP,'String',char(abs(vpa(Fxy(PPx(Reg),PPy(Reg))))*Dx*Dy))
 
 
 % --- Executes on button press in CB_P.
