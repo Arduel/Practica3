@@ -18,7 +18,7 @@ function [Vol,A,dx,dy,Px,Py,X,Y,Z,C,F] = Calc(F,Xx,Yy,xdiv,ydiv)
     s=0;
     for i=1:1:xdiv
         for j=1:1:ydiv
-            s=vpa(Fxy(Px(i,j),Py(i,j)))+s; %Puntos evaluados en la función
+            s=abs(vpa(Fxy(Px(i,j),Py(i,j))))+s; %Puntos evaluados en la función
         end
     end
     
